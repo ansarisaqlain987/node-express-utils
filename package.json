@@ -1,10 +1,16 @@
 {
   "name": "express-essentials-utils",
-  "version": "1.0.2",
+  "version": "1.0.3",
   "description": "Useful Express JS utils written in Typescript",
+  "readme": "README.md",
+  "homepage": "https://github.com/ansarisaqlain987/node-express-utils",
   "main": "./dist/index.js",
   "module": "./dist/index.mjs",
   "types": "./dist/index.d.ts",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/ansarisaqlain987/node-express-utils"
+  },
   "files": [
     "dist"
   ],
@@ -23,7 +29,7 @@
     "Authentication",
     "Security"
   ],
-  "author": "",
+  "author": "Saqlain Ansari",
   "license": "ISC",
   "devDependencies": {
     "@jest/globals": "^29.7.0",

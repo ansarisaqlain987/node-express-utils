@@ -26,40 +26,39 @@ export const decryptData = (encData: string, secret: string) => {
  * @description Uses the secret provided while configuring the module. Gived some inbuilt method on request object to intereact with JWT
  * @returns Express Middleware for verifying request
  */
-export const verifyToken = () => {
-    return (request: ExpressRequest, response: ExpressResponse, next: ExpressNextFunction) => {
-        const key = request?.jwt?.secret;
-        const cipherSecret = request?.jwt?.cipherSecret;
-        if (!key || !cipherSecret) {
-            return response.status(401).send({
-                error: "UNAUTHORIZED",
-                data: null
-            })
+export const verifyToken = (request: ExpressRequest, response: ExpressResponse, next: ExpressNextFunction) => {
+    const key = request?.jwt?.secret;
+    const cipherSecret = request?.jwt?.cipherSecret;
+    if (!key || !cipherSecret) {
+        return response.status(401).send({
+            error: "UNAUTHORIZED",
+            data: null
+        })
+    }
+    const headerName: string | undefined = request?.jwt?.headerName;
+    const bearerToken = headerName && request.get(headerName);
+    if (!bearerToken) {
+        return response.status(401).send({
+            error: "UNAUTHORIZED",
+            data: null
+        })
+    }
+    try {
+        const token = bearerToken?.split(" ")?.[1]
+        const decodedToken = decryptData(token, cipherSecret);
+        const decodedDataString: string = jwt.verify(decodedToken, key) as string;
+        request.jwt = {
+            ...request?.jwt,
+            cipherSecret: request?.jwt?.cipherSecret ?? "",
+            secret: request?.jwt?.secret ?? "",
+            user: decodedDataString
         }
-        const headerName: string | undefined = request?.jwt?.headerName;
-        const token = headerName && request.get(headerName);
-        if (!token) {
-            return response.status(401).send({
-                error: "UNAUTHORIZED",
-                data: null
-            })
-        }
-        try {
-            const decodedToken = decryptData(token, cipherSecret);
-            const decodedDataString: string = jwt.verify(decodedToken, key) as string
-            request.jwt = {
-                ...request?.jwt,
-                cipherSecret: request?.jwt?.cipherSecret ?? "",
-                secret: request?.jwt?.secret ?? "",
-                user: decodedDataString
-            }
-            next();
-        } catch (err) {
-            return response.status(401).send({
-                error: "UNAUTHORIZED",
-                data: null
-            })
-        }
+        next();
+    } catch (err) {
+        return response.status(401).send({
+            error: "UNAUTHORIZED",
+            data: null
+        })
     }
 }
 
@@ -75,7 +74,7 @@ export const initJWT = (options: JWTOptions) => {
             process.exit(0);
         }
         request.jwt = { secret: options.secret, cipherSecret: options.cipherSecret, headerName: options?.headerName ?? "authorization" }
-        request.getUser = function () {
+        request.getTokenData = function () {
             if (this.jwt?.user) {
                 try {
                     return JSON.parse(this.jwt?.user);
@@ -85,14 +84,14 @@ export const initJWT = (options: JWTOptions) => {
             }
             return null;
         }
-        request.createToken = function (data: string) {
+        request.createToken = function (data: any) {
             const key = this?.jwt?.secret ?? "";
             try {
                 const token = jwt.sign(data, key);
                 return encryptData(token, this?.jwt?.cipherSecret ?? "");
             } catch (err) {
                 console.log("Error while creating token: ", err);
-                return "";
+                return null;
             }
         }
         next();
