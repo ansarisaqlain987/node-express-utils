@@ -1,6 +1,6 @@
 {
   "name": "express-essentials-utils",
-  "version": "1.0.0",
+  "version": "1.0.1",
   "description": "Useful Express JS utils written in Typescript",
   "main": "./dist/index.js",
   "module": "./dist/index.mjs",
@@ -11,9 +11,19 @@
   "scripts": {
     "test": "jest --coverage",
     "test:watch": "jest --watch",
-    "build": "tsup"
+    "build": "tsup",
+    "publish": "npm publish",
+    "prepublish": "npm run build"
   },
-  "keywords": [],
+  "keywords": [
+    "Node",
+    "Typescript",
+    "Express",
+    "Logger",
+    "JWT",
+    "Authentication",
+    "Security"
+  ],
   "author": "",
   "license": "ISC",
   "devDependencies": {
