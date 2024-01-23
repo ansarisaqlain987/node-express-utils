@@ -46,6 +46,7 @@
   "dependencies": {
     "crypto-ts": "^1.0.2",
     "jsonwebtoken": "^9.0.2",
+    "pino": "^8.17.2",
     "uuid": "^9.0.1"
   }
 }
