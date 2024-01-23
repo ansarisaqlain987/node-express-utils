@@ -1,6 +1,6 @@
 {
   "name": "express-essentials-utils",
-  "version": "1.0.3",
+  "version": "1.0.4",
   "description": "Useful Express JS utils written in Typescript",
   "readme": "README.md",
   "homepage": "https://github.com/ansarisaqlain987/node-express-utils",
@@ -9,7 +9,7 @@
   "types": "./dist/index.d.ts",
   "repository": {
     "type": "git",
-    "url": "https://github.com/ansarisaqlain987/node-express-utils"
+    "url": "git+https://github.com/ansarisaqlain987/node-express-utils.git"
   },
   "files": [
     "dist"
